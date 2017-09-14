@@ -2,20 +2,40 @@ package minimalistTemplateEngine;
 
 public class TemplateEngine {
   
-  private String VAR_TOKEN_START   = "\\{\\{";
-  private String VAR_TOKEN_END     = "\\}\\}";
-  private String BLOCK_TOKEN_START = "\\{%";
-  private String BLOCK_TOKEN_END   = "%\\}";
+  public static String VAR_TOKEN_START   = "{{";
+  public static String VAR_TOKEN_END     = "}}";
+  public static String BLOCK_TOKEN_START = "{%";
+  public static String BLOCK_TOKEN_END   = "%}";
+  public static String STRIP_BLOCK_TOKEN_START = "{%-";
   private int TOKEN_MAX_SIZE = 99999;
   
   private String pattern;
   
   public TemplateEngine() {
-    this.pattern= "(?="+VAR_TOKEN_START+".{0,"+TOKEN_MAX_SIZE+"}?"+VAR_TOKEN_END+"|"+BLOCK_TOKEN_START+".{0,"+TOKEN_MAX_SIZE+"}?"+BLOCK_TOKEN_END+")|(?<="+VAR_TOKEN_START+".{0,"+TOKEN_MAX_SIZE+"}?"+VAR_TOKEN_END+"|"+BLOCK_TOKEN_START+".{0,"+TOKEN_MAX_SIZE+"}?"+BLOCK_TOKEN_END+")";
+    String tokenPattern = escRegex(VAR_TOKEN_START)+".{0,"+TOKEN_MAX_SIZE+"}?"+escRegex(VAR_TOKEN_END)+"|"+escRegex(BLOCK_TOKEN_START)+".{0,"+TOKEN_MAX_SIZE+"}?"+escRegex(BLOCK_TOKEN_END);
+    this.pattern= "(?="+tokenPattern+")|(?<="+tokenPattern+")";
+  }
+  
+  //escape regex special char '{' and '}'
+  private String escRegex(String s) {
+    return s.replaceAll("\\{", "\\\\{").replaceAll("\\}", "\\\\}");
   }
   
   public Token[] tokenize(String s){       
     String[] tokens_s = s.split(this.pattern);
+    
+    //apply strip block
+    for(int i=0; i<tokens_s.length; i++) {
+      if(tokens_s[i].startsWith(STRIP_BLOCK_TOKEN_START)) {
+        if(i>0) {
+          tokens_s[i-1] = tokens_s[i-1].replaceAll("\\h*$", ""); //remove trailing vertical whitespace from previous token
+        }
+        if(i<tokens_s.length-1) {
+          tokens_s[i+1] = tokens_s[i+1].replaceAll("^\\h*\\R?", ""); //remove leading whitespace + newline from next token
+        }
+      }
+    }
+    
     Token[] tokens = new Token[tokens_s.length];
     for(int i=0; i<tokens_s.length; i++) {
       tokens[i] = new Token(tokens_s[i]);
@@ -44,7 +64,6 @@ public class TemplateEngine {
     }
     
     return currentNode;
-    
   }
   
   public String render(String template, Context context) {
