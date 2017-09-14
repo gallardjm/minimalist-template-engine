@@ -18,8 +18,41 @@ Hello World!
 
 ## Supported template syntax
 
-* Variable ```{{ var }}```
+### Text replacement
+
+Delimiters: ```{{``` and ```}}```.
+
+* Variable ```{{ foo }}```
   - string only
-* Branch ```{% if condition %} {% else %} {% endif %}```
-  - condition must be a boolean
-  - nested branch supported
+
+### Logic  
+
+Delimiters: ```{%``` and ```%}```.
+
+* Branch ```{% if foo %} {% else %} {% endif %}```
+  - foo must be a boolean
+  
+Nested logic is supported.
+
+### Misc
+
+#### Strip logic block
+
+With ```{%-``` as start delimiter of a logic token, strip all whitespaces before the token + all whitespace and one newline if present after the token. This allow more readable templates without unecessary whitespaces and newlines in the result.
+
+Example: ``` foo \n {%- x %}   \n bar``` is evaluated as ``` foo \n{% x %} bar```. 
+
+### Future features
+
+The foolowing features are considered:
+
+Text replacement:
+
+* Arrays ```{{ var[i] }}```
+* Mathematical expression ```{{ 3*var**2+1}}```
+
+Logic:
+
+* Foreach loop ```{% for i in list %}```
+* Boolean expression ```{% if (a && b) || (c == 1) %}```
+
