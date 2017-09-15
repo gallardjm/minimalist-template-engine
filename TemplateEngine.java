@@ -2,6 +2,7 @@ package minimalistTemplateEngine;
 
 import minimalistTemplateEngine.syntaxtree.*;
 
+
 public class TemplateEngine {
   
   public static String VAR_TOKEN_START   = "{{";
