@@ -32,11 +32,11 @@ public class Token {
       } else {
         tag = tag.substring(TemplateEngine.BLOCK_TOKEN_START.length()).trim();
       }
-      if(tag.startsWith("endif")) {
+      if(tag.startsWith(TemplateEngine.LOGIC_ENDIF_TAG)) {
         type = IF_CLOSE_TOKEN;
-      } else if(tag.startsWith("else")) {
+      } else if(tag.startsWith(TemplateEngine.LOGIC_ELSE_TAG)) {
         type = IF_ELSE_TOKEN;
-      } else if(tag.startsWith("if")) {
+      } else if(tag.startsWith(TemplateEngine.LOGIC_IF_TAG)) {
         type = IF_OPEN_TOKEN;
       }
     } else {

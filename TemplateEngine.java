@@ -22,7 +22,13 @@ public class TemplateEngine {
   public static final String BLOCK_TOKEN_START = "{%";
   public static final String BLOCK_TOKEN_END   = "%}";
   /** Special block token start delimiter that strip whitespaces around it */
-  public static final String STRIP_BLOCK_TOKEN_START = "{%-";
+  public static final String STRIP_BLOCK_TOKEN_START = "{%-"; //must start like BLOCK_TOKEN_START
+  
+  /** Tags of the logic block for Branches */
+  public static final string LOGIC_IF_TAG    = "if";
+  public static final string LOGIC_ELSE_TAG  = "else";
+  public static final string LOGIC_ENDIF_TAG = "endif";
+  
   /** The size of the content of a grammar token has to be constrained for the look trick */
   private static final int TOKEN_MAX_SIZE = 99999;
   
