@@ -1,5 +1,7 @@
 package minimalistTemplateEngine;
 
+import minimalistTemplateEngine.syntaxtree.*;
+
 public class TemplateEngine {
   
   public static String VAR_TOKEN_START   = "{{";
@@ -45,12 +47,12 @@ public class TemplateEngine {
   }
   
   public SyntaxTree buildTree(Token[] tokens) {    
-    SyntaxTree currentNode = new Root();
+    SyntaxTree currentNode = new RootNode();
     for(Token t : tokens) {
       if(t.type == Token.VAR_TOKEN) {
-        currentNode.addNode(new Variable(t));
+        currentNode.addNode(new VariableNode(t));
       } else if(t.type == Token.TEXT_TOKEN) {
-        currentNode.addNode(new Text(t));
+        currentNode.addNode(new TextNode(t));
       } else if (t.type == Token.IF_OPEN_TOKEN) {
         SyntaxTree newNode = new IfNode(t, currentNode);
         currentNode.addNode(newNode);
