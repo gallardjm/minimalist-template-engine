@@ -1,54 +1,52 @@
 package minimalistTemplateEngine;
 
-import java.util.Map;
 import java.util.HashMap;
-import minimalistTemplateEngine.contextbox.ContextBox;
-import minimalistTemplateEngine.contextbox.StringBox;
-import minimalistTemplateEngine.contextbox.BooleanBox;
 
 /**
  * Context class
  *
  * Act like a Map<String, Multitype> to store a value (different types allowed) associated to a key
+ * Type allowed: String, boolean
+ * A key can have multiple values if each value has a different type
  *
- * Use put(key, value) to add a key and its value to the context. The value will be properly boxed
+ * Use put(key, value) to add a key and its value to the context.
  * Use getX(key) to get back a value of type X identified by the key
  */
 public class Context {
   
-  /** Store the keys->value in a map using ContextBox abstraction to box multiple types in the map */  
-  private Map<String, ContextBox> map;
+  // Store the keys->value pair in a the map corresponding to the right type for the value
+  private HashMap<String, String>  mapString;
+  private HashMap<String, Boolean> mapBoolean; //auto cast, boolean (primitive) <-> Boolean (object)
   
   public Context() {
-    map = new HashMap<String, ContextBox>();
+    mapString  = new HashMap<String, String>();
+    mapBoolean = new HashMap<String, Boolean>();
   }
   
   /** Put a String in the context */
-  public void put(String key, String s) {
-    map.put(key, new StringBox(s));
+  public void put(String key, String value) {
+    mapString.put(key, value);
   }
   
-  /** Put a Boolean in the context */
+  /** Put a boolean in the context */
   public void put(String key, boolean b) {
-    map.put(key, new BooleanBox(b));
+    mapBoolean.put(key, b);
   }
   
   /** Get a String from the context */
   public String getString(String key) {
-    ContextBox b = map.get(key);
-    if(b != null && b instanceof StringBox) {
-      return ((StringBox)b).value;
+    if(mapString.containsKey(key)) {
+      return mapString.get(key);
     } else {
       //ERROR
       return "";
     }
   }
   
-  /** Get a Boolean from the context */
+  /** Get a boolean from the context */
   public boolean getBool(String key) {
-    ContextBox b = map.get(key);
-    if(b != null && b instanceof BooleanBox) {
-      return ((BooleanBox)b).value;
+    if(mapBoolean.containsKey(key)) {
+      return mapBoolean.get(key);
     } else {
       //ERROR
       return false;
