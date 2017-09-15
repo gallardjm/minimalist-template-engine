@@ -1,7 +1,6 @@
 package minimalistTemplateEngine.syntaxtree;
 
 import minimalistTemplateEngine.Context;
-import minimalistTemplateEngine.Token;
 
 //If / else / endif
 public class IfNode extends SyntaxTree {

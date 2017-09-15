@@ -1,5 +1,6 @@
-package minimalistTemplateEngine;
+package minimalistTemplateEngine.syntaxtree;
 
+import minimalistTemplateEngine.TemplateEngine;
 
 public class Token {
   public static int VAR_TOKEN = 0;
@@ -10,7 +11,7 @@ public class Token {
   public static int IF_ELSE_TOKEN = 3;
   
   public int type = -1;
-  public String content;
+  private String content;
   
   public Token(String s) {
     content = s;

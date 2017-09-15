@@ -1,7 +1,6 @@
 package minimalistTemplateEngine.syntaxtree;
 
 import minimalistTemplateEngine.Context;
-import minimalistTemplateEngine.Token;
 
 //for variable {{ x }}
 public class VariableNode extends SyntaxTree {
