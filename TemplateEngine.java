@@ -1,77 +1,86 @@
 package minimalistTemplateEngine;
 
-import minimalistTemplateEngine.syntaxtree.*;
+import minimalistTemplateEngine.syntaxtree.Token;
+import minimalistTemplateEngine.syntaxtree.SyntaxTree;
+import minimalistTemplateEngine.syntaxtree.Token;
+import minimalistTemplateEngine.syntaxtree.Token;
+import minimalistTemplateEngine.syntaxtree.Token;
 
-
+/**
+ * Main class
+ *
+ * Once the context is build and initialized, use render(template, context) to run the template
+ * engine on the template with the given context
+ *
+ * You can change the grammar by editing the constant from this class
+ */
 public class TemplateEngine {
   
-  public static String VAR_TOKEN_START   = "{{";
-  public static String VAR_TOKEN_END     = "}}";
-  public static String BLOCK_TOKEN_START = "{%";
-  public static String BLOCK_TOKEN_END   = "%}";
-  public static String STRIP_BLOCK_TOKEN_START = "{%-";
-  private int TOKEN_MAX_SIZE = 99999;
+  //Configuration parameters
+  //------------------------
+  /** Var tokens contain variable and come alone */
+  public static final String VAR_TOKEN_START   = "{{";
+  public static final String VAR_TOKEN_END     = "}}";
+  /** Block tokens contain logic and come in group, requiring a syntax tree to evaluate */
+  public static final String BLOCK_TOKEN_START = "{%";
+  public static final String BLOCK_TOKEN_END   = "%}";
+  /** Special block token start delimiter that strip whitespaces around it */
+  public static final String STRIP_BLOCK_TOKEN_START = "{%-";
+  /** The size of the content of a grammar token has to be constrained for the look trick */
+  private static final int TOKEN_MAX_SIZE = 99999;
   
-  private String pattern;
+  /** Regex used to tokenize the template */
+  private String regex;
   
   public TemplateEngine() {
-    String tokenPattern = escRegex(VAR_TOKEN_START)+".{0,"+TOKEN_MAX_SIZE+"}?"+escRegex(VAR_TOKEN_END)+"|"+escRegex(BLOCK_TOKEN_START)+".{0,"+TOKEN_MAX_SIZE+"}?"+escRegex(BLOCK_TOKEN_END);
-    this.pattern= "(?="+tokenPattern+")|(?<="+tokenPattern+")";
+    buildRegex(); //set this.regex
   }
   
-  //escape regex special char '{' and '}'
-  private String escRegex(String s) {
-    return s.replaceAll("\\{", "\\\\{").replaceAll("\\}", "\\\\}");
+  public String getRegex() {
+    return regex;
   }
   
-  public Token[] tokenize(String s){       
-    String[] tokens_s = s.split(this.pattern);
+  /**
+   * Build a regex pattern to split a string (the template) into tokens (grammar and text ones)
+   *
+   * A grammar token is delimiter start, content, delimiter end
+   * All the text between two grammar token (or before the first/ after the last) is one text token
+   * Grammar tokens are contrained in size by TOKEN_MAX_SIZE (arbitrary large int)
+   * Text tokens can be arbitrary long
+   *
+   * The base regex find the grammar tokens, the regex then use it with the lookahead and lookbehind 
+   * trick to keep the grammar token matches in the split result
+   */
+  private void buildRegex() {
+    //constrains the size of a grammar token for the look trick
+    final String tokenContent = ".{0,"+TOKEN_MAX_SIZE+"}?";
     
-    //apply strip block
-    for(int i=0; i<tokens_s.length; i++) {
-      if(tokens_s[i].startsWith(STRIP_BLOCK_TOKEN_START)) {
-        if(i>0) {
-          tokens_s[i-1] = tokens_s[i-1].replaceAll("\\h*$", ""); //remove trailing vertical whitespace from previous token
-        }
-        if(i<tokens_s.length-1) {
-          tokens_s[i+1] = tokens_s[i+1].replaceAll("^\\h*\\R?", ""); //remove leading whitespace + newline from next token
-        }
-      }
-    }
+    // tokens
+    final String varToken = escRegex(VAR_TOKEN_START)+tokenContent+escRegex(VAR_TOKEN_END);
+    final String blockToken = escRegex(BLOCK_TOKEN_START)+tokenContent+escRegex(BLOCK_TOKEN_END);
     
-    Token[] tokens = new Token[tokens_s.length];
-    for(int i=0; i<tokens_s.length; i++) {
-      tokens[i] = new Token(tokens_s[i]);
-    }
+    //match one of the grammar tokens
+    final String tokenPattern = varToken+"|"+blockToken; 
     
-    return tokens;
+    //lookahead+lookbehind trick
+    this.regex = "(?="+tokenPattern+")|(?<="+tokenPattern+")"; 
   }
   
-  public SyntaxTree buildTree(Token[] tokens) {    
-    SyntaxTree currentNode = new RootNode();
-    for(Token t : tokens) {
-      if(t.type == Token.VAR_TOKEN) {
-        currentNode.addNode(new VariableNode(t));
-      } else if(t.type == Token.TEXT_TOKEN) {
-        currentNode.addNode(new TextNode(t));
-      } else if (t.type == Token.IF_OPEN_TOKEN) {
-        SyntaxTree newNode = new IfNode(t, currentNode);
-        currentNode.addNode(newNode);
-        currentNode = newNode;
-      } else if (t.type == Token.IF_ELSE_TOKEN) {
-        IfNode p = (IfNode)(currentNode);
-        p.startElseBlock();
-      } else if (t.type == Token.IF_CLOSE_TOKEN) {
-        currentNode = currentNode.parent;
-      }
-    }
-    
-    return currentNode;
-  }
+  /** escape regex special char '{' and '}' by adding '\' */
+  private String escRegex(String regex) {
+    // ReplaceAll uses regex itself hence the '\\' and '\\\\'
+    return regex.replaceAll("\\{", "\\\\{").replaceAll("\\}", "\\\\}");
+  }  
   
+  /**
+   * Evaluate a template with a given context.
+   *
+   * @param the template to render as a String
+   * @param the context to use to render the template (of Context class)
+   * @return a string with the rendered template
+   */
   public String render(String template, Context context) {
-    SyntaxTree st = buildTree(tokenize(template));
-    return st.render(context);
+    return SyntaxTree.buildTree(template, this.regex).render(context);
   }
   
   

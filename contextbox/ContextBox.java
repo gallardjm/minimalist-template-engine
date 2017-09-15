@@ -1,3 +1,6 @@
 package minimalistTemplateEngine.contextbox;
 
-public interface ContextBox {}
+/** Interface of a box used by the context map to store data */
+public interface ContextBox {
+  //public BOXTYPE value;
+}

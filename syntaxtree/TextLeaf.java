@@ -2,15 +2,18 @@ package minimalistTemplateEngine.syntaxtree;
 
 import minimalistTemplateEngine.Context;
 
-//For pure text
-public class TextNode extends SyntaxTree {
+/**
+ * Syntax tree leaf for pure text without any special meaning
+ */
+public class TextLeaf extends SyntaxTree {
   
   private String text;
   
-  public TextNode(Token t) {
+  public TextLeaf(Token t) {
     text = t.getContentClean();
   }
 
+  @Override
   public String render(Context c) {
     return text;
   }

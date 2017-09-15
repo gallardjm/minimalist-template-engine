@@ -3,24 +3,31 @@ package minimalistTemplateEngine.syntaxtree;
 import minimalistTemplateEngine.TemplateEngine;
 
 public class Token {
-  public static int VAR_TOKEN = 0;
-  public static int TEXT_TOKEN = 1;
+  public static final int VAR_TOKEN      = 0; /** type of variable grammar token*/
+  public static final int TEXT_TOKEN     = 1; /** type of text token*/
   
-  public static int IF_OPEN_TOKEN = 2;
-  public static int IF_CLOSE_TOKEN = 4;
-  public static int IF_ELSE_TOKEN = 3;
+  // if else endif block
+  public static final int IF_OPEN_TOKEN  = 2; /** type of logic grammar token: if */
+  public static final int IF_ELSE_TOKEN  = 3; /** type of logic grammar token: else */
+  public static final int IF_CLOSE_TOKEN = 4; /** type of logic grammar token: endif */
+
   
-  public int type = -1;
-  private String content;
+  public int type = -1; /** type of token, matched with the constant, by default -1 = invalid */
+  private String rawContent; /** the token full string */
   
-  public Token(String s) {
-    content = s;
-    if(s.startsWith(TemplateEngine.VAR_TOKEN_START)) {
+  
+  public Token(String tokenAsString) {
+    this.rawContent = tokenAsString;
+    defineType();
+  }
+  
+  
+  private void defineType() {
+    if(rawContent.startsWith(TemplateEngine.VAR_TOKEN_START)) {
       type = VAR_TOKEN;
-    } else if(s.startsWith(TemplateEngine.BLOCK_TOKEN_START)) {
-      String tag = s;
-      if(tag.startsWith(TemplateEngine.STRIP_BLOCK_TOKEN_START)) 
-      {
+    } else if(rawContent.startsWith(TemplateEngine.BLOCK_TOKEN_START)) {
+      String tag = rawContent;
+      if(tag.startsWith(TemplateEngine.STRIP_BLOCK_TOKEN_START)) {
         tag = tag.substring(TemplateEngine.STRIP_BLOCK_TOKEN_START.length()).trim();
       } else {
         tag = tag.substring(TemplateEngine.BLOCK_TOKEN_START.length()).trim();
@@ -29,7 +36,7 @@ public class Token {
         type = IF_CLOSE_TOKEN;
       } else if(tag.startsWith("else")) {
         type = IF_ELSE_TOKEN;
-      } else if(tag.startsWith("if")){
+      } else if(tag.startsWith("if")) {
         type = IF_OPEN_TOKEN;
       }
     } else {
@@ -39,18 +46,23 @@ public class Token {
   
   @Override
   public String toString() {
-    return type+" | \""+content+"\"";
+    return type+" | \""+rawContent+"\"";
   }
   
+  /**
+   * Return the clean content of a token
+   * Text token: everything in the token
+   * Grammar token: the inside of the delimiters + trim()
+   */
   public String getContentClean() {
     if(type == VAR_TOKEN || type == IF_ELSE_TOKEN || type == IF_CLOSE_TOKEN) {
-      String clean = content.substring(TemplateEngine.BLOCK_TOKEN_START.length());
+      String clean = rawContent.substring(TemplateEngine.BLOCK_TOKEN_START.length());
       clean = clean.substring(0, clean.length()-TemplateEngine.BLOCK_TOKEN_END.length());
       return clean.trim();
     } else if (type == TEXT_TOKEN) {
-      return content;
+      return rawContent;
     } else if(type == IF_OPEN_TOKEN) {
-      String clean = content;
+      String clean = rawContent;
       if(clean.startsWith(TemplateEngine.STRIP_BLOCK_TOKEN_START)) 
       {
         clean = clean.substring(TemplateEngine.STRIP_BLOCK_TOKEN_START.length());
@@ -63,5 +75,39 @@ public class Token {
     }
     
     return "";
+  }
+    
+  /**
+   * Breaks a string into tokens using a given regex.
+   * Apply strip token logic before building the token so return value != input splitted
+   *
+   * @param the template to evaluate as String
+   * @param the regex used to split the template into tokens
+   * @return the string splitted into token
+   */
+  static public Token[] tokenize(String template, String regex){       
+    String[] tokens_s = template.split(regex);
+    
+    //apply strip block
+    for(int i=0; i<tokens_s.length; i++) {
+      if(tokens_s[i].startsWith(TemplateEngine.STRIP_BLOCK_TOKEN_START)) {
+        if(i>0) {
+          //remove trailing vertical whitespace from previous token
+          tokens_s[i-1] = tokens_s[i-1].replaceAll("\\h*$", ""); 
+        }
+        if(i<tokens_s.length-1) {
+          //remove leading whitespace + newline from next token
+          tokens_s[i+1] = tokens_s[i+1].replaceAll("^\\h*\\R?", ""); 
+        }
+      }
+    }
+    
+    //build token
+    Token[] tokens = new Token[tokens_s.length];
+    for(int i=0; i<tokens_s.length; i++) {
+      tokens[i] = new Token(tokens_s[i]);
+    }
+    
+    return tokens;
   }
 }

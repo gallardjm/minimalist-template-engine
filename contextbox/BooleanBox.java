@@ -1,6 +1,6 @@
 package minimalistTemplateEngine.contextbox;
 
-
+/** Box for Boolean */
 public class BooleanBox implements ContextBox {
   public boolean value;
   
