@@ -17,7 +17,7 @@ public abstract class SyntaxTree {
   public void addNode(SyntaxTree node) {}
   
   /** render this node */
-  public String render(Context context) { return "";}
+  public String render(Context context) throws IllegalArgumentException { return "";}
   
   /**
    * Render the children of this node.
@@ -26,7 +26,7 @@ public abstract class SyntaxTree {
    * @param the context of the rendering used to evaluate nodes and leafs
    * @return the rendered syntax tree
    */
-  public String renderChildren(Context context) {
+  public String renderChildren(Context context) throws IllegalArgumentException {
     String result = "";
     for(SyntaxTree child : children) {
       result += child.render(context);
@@ -42,7 +42,9 @@ public abstract class SyntaxTree {
    * @param the regex to tokenize the template
    * @return a SyntaxTree ready to be rendered
    */
-  static public final SyntaxTree buildTree(String template, String regex) {    
+  static public final SyntaxTree buildTree(String template, String regex) 
+      throws IllegalArgumentException  
+  {    
     Token[] tokens = Token.tokenize(template, regex);
     
     SyntaxTree currentNode = new RootNode(); //start with a root node
@@ -60,11 +62,11 @@ public abstract class SyntaxTree {
           IfNode p = (IfNode)(currentNode); 
           p.startElseBlock();
         } else {
-          //ERROR
+          throw new IllegalArgumentException("Read an else block without being in an if block");
         }
       } else if (t.type == Token.IF_CLOSE_TOKEN) { //endif, go back to the parent of the subtree
         if(currentNode.parent == null) {
-          //ERROR
+          throw new IllegalArgumentException("Read an endif block without being in an if block");
         }
         currentNode = currentNode.parent;
       }

@@ -1,7 +1,6 @@
 package minimalistTemplateEngine.syntaxtree;
 
 import java.util.ArrayList;
-
 import minimalistTemplateEngine.Context;
 
 /**
@@ -21,7 +20,7 @@ public class RootNode extends SyntaxTree {
   
   /** Performs a DFS */
   @Override
-  public String render(Context c) {
+  public String render(Context c) throws IllegalArgumentException {
     return renderChildren(c);
   }
 }

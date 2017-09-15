@@ -34,22 +34,22 @@ public class Context {
   }
   
   /** Get a String from the context */
-  public String getString(String key) {
+  public String getString(String key) throws IllegalArgumentException {
     if(mapString.containsKey(key)) {
       return mapString.get(key);
     } else {
-      //ERROR
-      return "";
+      throw new IllegalArgumentException(
+          "Context doesn't contain a String value for the key \""+key+"\"");
     }
   }
   
   /** Get a boolean from the context */
-  public boolean getBool(String key) {
+  public boolean getBool(String key) throws IllegalArgumentException {
     if(mapBoolean.containsKey(key)) {
       return mapBoolean.get(key);
     } else {
-      //ERROR
-      return false;
+      throw new IllegalArgumentException(
+          "Context doesn't contain a boolean value for the key \""+key+"\"");
     }
   }
   

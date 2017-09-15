@@ -2,9 +2,6 @@ package minimalistTemplateEngine;
 
 import minimalistTemplateEngine.syntaxtree.Token;
 import minimalistTemplateEngine.syntaxtree.SyntaxTree;
-import minimalistTemplateEngine.syntaxtree.Token;
-import minimalistTemplateEngine.syntaxtree.Token;
-import minimalistTemplateEngine.syntaxtree.Token;
 
 /**
  * Main class
@@ -79,7 +76,7 @@ public class TemplateEngine {
    * @param the context to use to render the template (of Context class)
    * @return a string with the rendered template
    */
-  public String render(String template, Context context) {
+  public String render(String template, Context context) throws IllegalArgumentException {
     return SyntaxTree.buildTree(template, this.regex).render(context);
   }
   

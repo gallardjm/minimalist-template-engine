@@ -14,7 +14,7 @@ public class TextLeaf extends SyntaxTree {
   }
 
   @Override
-  public String render(Context c) {
+  public String render(Context c) throws IllegalArgumentException {
     return text;
   }
 }

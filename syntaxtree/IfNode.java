@@ -35,7 +35,7 @@ public class IfNode extends SyntaxTree {
   //TODO extend to boolean expression
   /** Render the subtree corresponding to the correct branch (eventually empty) */
   @Override
-  public String render(Context c) {
+  public String render(Context c) throws IllegalArgumentException {
     boolean value = c.getBool(condition.getContentClean());
     if(value) {
       return ifBlock.render(c);
