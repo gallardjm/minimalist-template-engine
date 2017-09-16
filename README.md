@@ -1,6 +1,8 @@
 # Minimalist Template Engine
 
-A minimalist template engine in java with no dependency.
+A minimalist template engine in java with no dependency outside the standard java libraries (java >= 1.8).
+
+/!\ Some inputs are not sanitize, use this template engine responsibly.
 
 ## Quick start
 
@@ -18,41 +20,42 @@ Hello World!
 
 ## Supported template syntax
 
-Context's keys have to be a valid variable name (only characters from [a-zA-Z_0-9], at least one)
+The context contains the key->values pairs used by the expression in the grammar tokens, defined below. A context's key has to be a valid variable name (only characters from [a-zA-Z_0-9], at least one). Values can be of any java standard object type (e.g. String, Boolean, Double, Integer) or array of a standard object type. Note that lists are allowed as value and that primitive types will be casted to the corresponding object type automatically (e.g. int to Integer).
 
-The Context uses a Javascript engine (from the package javax.script) to evaluate expression in the grammar tokens.
+The Context uses a Javascript engine (from the package javax.script) to evaluate expression in the grammar tokens using the allocated key->value pairs. All expression inside the grammar tokens have to be valid javascript expressions that can use the keys as a variable with value the one associated to the key. 
 
-### Text replacement
+/!\ Expressions and values are not sanitized.
 
-Delimiters: ```{{``` and ```}}```.
+### Text replacement token
 
-* Variable ```{{ foo }}```
-  - foo is any expression (javascript syntax) resulting in a String, an int or a double
+Default delimiters: ```{{``` and ```}}```.
 
-### Logic  
+Any expression resulting in a String, an int or a double is valid inside these delimiters. The token is replaced by the output of the expression.
 
-Delimiters: ```{%``` and ```%}```.
+### Logic token
+
+Default delimiters: ```{%``` and ```%}```.
+
+These delimiters allow some logic in the template processing. Nested logic is supported.
+
+The following logic is implemented:
 
 * Branch ```{% if foo %} {% else %} {% endif %}```
   - foo is any boolean expression (javascript syntax)
+  - else is optional
   
-Nested logic is supported.
 
 ### Misc
 
 #### Strip logic block
 
-With ```{%-``` as start delimiter of a logic token, strip all whitespaces before the token + all whitespace and one newline if present after the token. This allow more readable templates without unecessary whitespaces and newlines in the result.
+With ```{%-``` as start delimiter of a logic token, strip all whitespaces before the token + all whitespaces and one newline if present after the token. This allow more readable templates without unecessary whitespaces and newlines in the result.
 
 Example: ``` foo \n {%- x %}   \n bar``` is evaluated as ``` foo \n{% x %} bar```. 
 
 ### Future features
 
-The foolowing features are considered:
-
-Text replacement:
-
-* Arrays ```{{ var[i] }}```
+The foolowing features are still not implemented:
 
 Logic:
 
