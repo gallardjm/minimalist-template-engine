@@ -19,5 +19,5 @@ public class VariableLeaf extends SyntaxTree {
   public String render(Context c) throws IllegalArgumentException {    
     return c.getString(token.getContentClean());
   }
+  
 }
-

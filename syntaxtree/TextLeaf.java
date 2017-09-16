@@ -17,4 +17,5 @@ public class TextLeaf extends SyntaxTree {
   public String render(Context c) throws IllegalArgumentException {
     return text;
   }
+  
 }

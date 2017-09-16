@@ -23,4 +23,5 @@ public class RootNode extends SyntaxTree {
   public String render(Context c) throws IllegalArgumentException {
     return renderChildren(c);
   }
+  
 }

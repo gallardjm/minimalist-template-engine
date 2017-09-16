@@ -86,5 +86,4 @@ public class TemplateEngine {
     return SyntaxTree.buildTree(template, this.regex).render(context);
   }
   
-  
 }

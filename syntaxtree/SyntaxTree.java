@@ -43,8 +43,8 @@ public abstract class SyntaxTree {
    * @return a SyntaxTree ready to be rendered
    */
   static public final SyntaxTree buildTree(String template, String regex) 
-      throws IllegalArgumentException  
-  {    
+      throws IllegalArgumentException
+  {
     Token[] tokens = Token.tokenize(template, regex);
     
     SyntaxTree currentNode = new RootNode(); //start with a root node
@@ -74,10 +74,5 @@ public abstract class SyntaxTree {
     
     return currentNode;
   }
+  
 }
-
-
-
-
-
-

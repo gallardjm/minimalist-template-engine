@@ -3,14 +3,13 @@ package minimalistTemplateEngine.syntaxtree;
 import minimalistTemplateEngine.TemplateEngine;
 
 public class Token {
+  
   public static final int VAR_TOKEN      = 0; /** type of variable grammar token*/
   public static final int TEXT_TOKEN     = 1; /** type of text token*/
-  
-  // if else endif block
   public static final int IF_OPEN_TOKEN  = 2; /** type of logic grammar token: if */
   public static final int IF_ELSE_TOKEN  = 3; /** type of logic grammar token: else */
   public static final int IF_CLOSE_TOKEN = 4; /** type of logic grammar token: endif */
-
+  
   
   public int type = -1; /** type of token, matched with the constant, by default -1 = invalid */
   private String rawContent; /** the token full string */
@@ -76,7 +75,7 @@ public class Token {
     
     return "";
   }
-    
+  
   /**
    * Breaks a string into tokens using a given regex.
    * Apply strip token logic before building the token so return value != input splitted
@@ -110,4 +109,5 @@ public class Token {
     
     return tokens;
   }
+  
 }
