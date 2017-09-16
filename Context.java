@@ -37,8 +37,9 @@ public class Context {
    */
   public void put(String key, String value) {
     try {
+      validateKey(key);
       engine.eval(key+" = \""+value+ "\""); // put `key = "value"` in the engine
-    } catch (ScriptException e) {
+    } catch (Exception e) {
       System.err.println("ERROR in Context: put("+key+", "+value+") failed. Context is corrupted.");
       corrupted = true;
     }
@@ -50,8 +51,9 @@ public class Context {
   */
   public void put(String key, boolean value) {
     try {
+      validateKey(key);
       engine.eval(key+" = "+(value ? "true" : "false")); // put `key = true/false` in the engine
-    } catch (ScriptException e) {
+    } catch (Exception e) {
       System.err.println("ERROR in Context: put("+key+", "+value+") failed. Context is corrupted.");
       corrupted = true;
     }
@@ -63,8 +65,9 @@ public class Context {
    */
   public void put(String key, int value) {
     try {
+      validateKey(key);
       engine.eval(key+" = "+value); // put `key = value` in the engine
-    } catch (ScriptException e) {
+    } catch (Exception e) {
       System.err.println("ERROR in Context: put("+key+", "+value+") failed. Context is corrupted.");
       corrupted = true;
     }
@@ -76,10 +79,19 @@ public class Context {
    */
   public void put(String key, double value) {
     try {
+      validateKey(key);
       engine.eval(key+" = "+value); // put `key = value` in the engine
-    } catch (ScriptException e) {
+    } catch (Exception e) {
       System.err.println("ERROR in Context: put("+key+", "+value+") failed. Context is corrupted.");
       corrupted = true;
+    }
+  }
+  
+  /** Verify that a key is one word with normal characters ([a-zA-Z_0-9]+) */
+  private void validateKey(String key) throws IllegalArgumentException {
+    if(key == null || !key.matches("^\\w+$")) {
+      System.err.println("ERROR in Context: invalid key: "+key);
+      throw new IllegalArgumentException("Invalid key: "+key);
     }
   }
   
