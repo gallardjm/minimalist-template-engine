@@ -51,7 +51,7 @@ public class Token {
   /**
    * Return the clean content of a token
    * Text token: everything in the token
-   * Grammar token: the inside of the delimiters + trim()
+   * Grammar token: the inside of the delimiters - tag + trim()
    */
   public String getContentClean() {
     if(type == VAR_TOKEN || type == IF_ELSE_TOKEN || type == IF_CLOSE_TOKEN) {
@@ -69,7 +69,7 @@ public class Token {
         clean = clean.substring(TemplateEngine.BLOCK_TOKEN_START.length());
       }
       clean = clean.substring(0, clean.length()-TemplateEngine.BLOCK_TOKEN_END.length());
-      clean = clean.trim().substring(2).trim(); //remove the if
+      clean = clean.trim().substring(TemplateEngine.LOGIC_IF_TAG.length()).trim(); //remove the tag
       return clean;
     }
     
