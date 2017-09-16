@@ -32,55 +32,13 @@ public class Context {
   }
   
   /** 
-   * Put a String in the context 
+   * Put a key->value pair in the context 
    * Errors are catched but trigger warnings and corrupt the Context (=unusable to render)
    */
-  public void put(String key, String value) {
+  public void put(String key, Object value) {
     try {
       validateKey(key);
-      engine.eval(key+" = \""+value+ "\""); // put `key = "value"` in the engine
-    } catch (Exception e) {
-      System.err.println("ERROR in Context: put("+key+", "+value+") failed. Context is corrupted.");
-      corrupted = true;
-    }
-  }
-  
-  /** 
-  * Put a boolean in the context 
-  * Errors are catched but trigger warnings and corrupt the Context (=unusable to render)
-  */
-  public void put(String key, boolean value) {
-    try {
-      validateKey(key);
-      engine.eval(key+" = "+(value ? "true" : "false")); // put `key = true/false` in the engine
-    } catch (Exception e) {
-      System.err.println("ERROR in Context: put("+key+", "+value+") failed. Context is corrupted.");
-      corrupted = true;
-    }
-  }
-  
-  /** 
-   * Put an int in the context 
-   * Errors are catched but trigger warnings and corrupt the Context (=unusable to render)
-   */
-  public void put(String key, int value) {
-    try {
-      validateKey(key);
-      engine.eval(key+" = "+value); // put `key = value` in the engine
-    } catch (Exception e) {
-      System.err.println("ERROR in Context: put("+key+", "+value+") failed. Context is corrupted.");
-      corrupted = true;
-    }
-  }
-  
-  /** 
-   * Put a double in the context 
-   * Errors are catched but trigger warnings and corrupt the Context (=unusable to render)
-   */
-  public void put(String key, double value) {
-    try {
-      validateKey(key);
-      engine.eval(key+" = "+value); // put `key = value` in the engine
+      engine.put(key, value); 
     } catch (Exception e) {
       System.err.println("ERROR in Context: put("+key+", "+value+") failed. Context is corrupted.");
       corrupted = true;
