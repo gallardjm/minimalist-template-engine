@@ -18,19 +18,23 @@ Hello World!
 
 ## Supported template syntax
 
+Context's keys have to be a valid variable name (only characters from [a-zA-Z_0-9], at least one)
+
+The Context uses a Javascript engine (from the package javax.script) to evaluate expression in the grammar tokens.
+
 ### Text replacement
 
 Delimiters: ```{{``` and ```}}```.
 
 * Variable ```{{ foo }}```
-  - string only
+  - foo is any expression (javascript syntax) resulting in a String, an int or a double
 
 ### Logic  
 
 Delimiters: ```{%``` and ```%}```.
 
 * Branch ```{% if foo %} {% else %} {% endif %}```
-  - foo must be a boolean
+  - foo is any boolean expression (javascript syntax)
   
 Nested logic is supported.
 
@@ -49,10 +53,8 @@ The foolowing features are considered:
 Text replacement:
 
 * Arrays ```{{ var[i] }}```
-* Mathematical expression ```{{ 3*var**2+1}}```
 
 Logic:
 
 * Foreach loop ```{% for i in list %}```
-* Boolean expression ```{% if (a && b) || (c == 1) %}```
 
