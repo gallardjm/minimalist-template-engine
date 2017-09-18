@@ -4,6 +4,8 @@ A minimalist template engine in java with no dependency outside the standard jav
 
 /!\ Some inputs are not sanitize, use this template engine responsibly.
 
+Github: https://github.com/gallardjm/minitemp
+
 ## Quick start
 
 Hello World!
