@@ -1,7 +1,7 @@
-package minimalistTemplateEngine;
+package minitemp;
 
-import minimalistTemplateEngine.syntaxtree.Token;
-import minimalistTemplateEngine.syntaxtree.SyntaxTree;
+import minitemp.syntaxtree.Token;
+import minitemp.syntaxtree.SyntaxTree;
 
 /**
  * Main class

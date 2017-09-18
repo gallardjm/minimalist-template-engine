@@ -1,7 +1,7 @@
-package minimalistTemplateEngine.syntaxtree;
+package minitemp.syntaxtree;
 
 import java.util.ArrayList;
-import minimalistTemplateEngine.Context;
+import minitemp.Context;
 
 /**
  * Syntax tree node with multiple children. Do not contain a token.

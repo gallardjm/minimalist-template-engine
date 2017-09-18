@@ -1,7 +1,7 @@
-package minimalistTemplateEngine.syntaxtree;
+package minitemp.syntaxtree;
 
 import java.util.List;
-import minimalistTemplateEngine.Context;
+import minitemp.Context;
 
 /**
  * Abstract class to build a syntax tree from the token list.

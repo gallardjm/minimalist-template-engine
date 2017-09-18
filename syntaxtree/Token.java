@@ -1,6 +1,6 @@
-package minimalistTemplateEngine.syntaxtree;
+package minitemp.syntaxtree;
 
-import minimalistTemplateEngine.TemplateEngine;
+import minitemp.TemplateEngine;
 
 public class Token {
   

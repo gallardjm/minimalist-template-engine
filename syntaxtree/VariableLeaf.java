@@ -1,6 +1,6 @@
-package minimalistTemplateEngine.syntaxtree;
+package minitemp.syntaxtree;
 
-import minimalistTemplateEngine.Context;
+import minitemp.Context;
 
 /**
  * Syntax tree leaf for variable '{{ var }}'
