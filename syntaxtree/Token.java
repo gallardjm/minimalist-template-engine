@@ -1,5 +1,8 @@
 package minitemp.syntaxtree;
 
+import java.util.ArrayList;
+import java.lang.StringBuilder;
+
 import minitemp.TemplateEngine;
 
 public class Token {
@@ -96,27 +99,63 @@ public class Token {
    * @param the regex used to split the template into tokens
    * @return the string splitted into token
    */
-  static public Token[] tokenize(String template, String regex){       
-    String[] tokens_s = template.split(regex);
+  static public Token[] tokenize(String template, String regex){
+    String[] tokens_splitted = template.split(regex); //split the template around delimiters
+    
+    //assemble the tokens
+    ArrayList<String> tokens_assembled = new ArrayList<String>(tokens_splitted.length/2+10); //initial guess
+    StringBuilder chunk = null;
+    boolean inChunk = false;
+    for(int i=0; i<tokens_splitted.length; i++) {
+      switch(tokens_splitted[i]){
+        case TemplateEngine.VAR_TOKEN_START:
+            inChunk = true;
+            chunk = new StringBuilder(TemplateEngine.VAR_TOKEN_START);
+            break;
+        case TemplateEngine.BLOCK_TOKEN_START:
+            inChunk = true;
+            chunk = new StringBuilder(TemplateEngine.BLOCK_TOKEN_START);
+            break;
+        case TemplateEngine.VAR_TOKEN_END:
+            inChunk = false;
+            chunk.append(TemplateEngine.VAR_TOKEN_END);
+            tokens_assembled.add(chunk.toString());
+            break;
+        case TemplateEngine.BLOCK_TOKEN_END:
+            inChunk = false;
+            chunk.append(TemplateEngine.BLOCK_TOKEN_END);
+            tokens_assembled.add(chunk.toString());
+            break;
+        default:
+          if(inChunk) {
+            chunk.append(tokens_splitted[i]);
+          } else {
+            tokens_assembled.add(tokens_splitted[i]);
+          }
+      }
+    }
+    
+    String[] tokens_raw = new String[tokens_assembled.size()];
+    tokens_raw = tokens_assembled.toArray(tokens_raw);
     
     //apply strip block
-    for(int i=0; i<tokens_s.length; i++) {
-      if(tokens_s[i].startsWith(TemplateEngine.STRIP_BLOCK_TOKEN_START)) {
+    for(int i=0; i<tokens_raw.length; i++) {
+      if(tokens_raw[i].startsWith(TemplateEngine.STRIP_BLOCK_TOKEN_START)) {
         if(i>0) {
           //remove trailing vertical whitespace from previous token
-          tokens_s[i-1] = tokens_s[i-1].replaceAll("\\h*$", ""); 
+          tokens_raw[i-1] = tokens_raw[i-1].replaceAll("\\h*$", ""); 
         }
-        if(i<tokens_s.length-1) {
+        if(i<tokens_raw.length-1) {
           //remove leading whitespace + newline from next token
-          tokens_s[i+1] = tokens_s[i+1].replaceAll("^\\h*\\R?", ""); 
+          tokens_raw[i+1] = tokens_raw[i+1].replaceAll("^\\h*\\R?", "");
         }
       }
     }
     
-    //build token
-    Token[] tokens = new Token[tokens_s.length];
-    for(int i=0; i<tokens_s.length; i++) {
-      tokens[i] = new Token(tokens_s[i]);
+    //build Token object
+    Token[] tokens = new Token[tokens_raw.length];
+    for(int i=0; i<tokens_raw.length; i++) {
+      tokens[i] = new Token(tokens_raw[i]);
     }
     
     return tokens;
