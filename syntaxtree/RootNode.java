@@ -24,4 +24,10 @@ public class RootNode extends SyntaxTree {
     return renderChildren(context);
   }
   
+  /** Performs a DFS */
+  @Override
+  public void renderWithStringBuilder(Context context, StringBuilder sb) throws IllegalArgumentException {
+    renderChildrenWithStringBuilder(context, sb);
+  }
+  
 }

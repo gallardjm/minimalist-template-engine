@@ -43,4 +43,15 @@ public class IfNode extends SyntaxTree {
     }
   }
   
+  /** Render the subtree corresponding to the correct branch (eventually empty) */
+  @Override
+  public void renderWithStringBuilder(Context context, StringBuilder sb) throws IllegalArgumentException {
+    boolean value = context.evaluateBoolean(condition.getContentClean());
+    if(value) {
+      ifBlock.renderWithStringBuilder(context, sb);
+    } else {
+      elseBlock.renderWithStringBuilder(context, sb);
+    }
+  }
+  
 }

@@ -18,4 +18,9 @@ public class TextLeaf extends SyntaxTree {
     return text;
   }
   
+  @Override
+  public void renderWithStringBuilder(Context context, StringBuilder sb) throws IllegalArgumentException {
+    sb.append(text);
+  }
+  
 }

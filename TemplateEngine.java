@@ -85,7 +85,10 @@ public class TemplateEngine {
    * @return a string with the rendered template
    */
   public String render(String template, Context context) throws IllegalArgumentException {
-    return SyntaxTree.buildTree(template, this.regex).render(context);
+    SyntaxTree st = SyntaxTree.buildTree(template, this.regex);
+    StringBuilder sb = new StringBuilder(template.length()); //initial guess
+    st.renderWithStringBuilder(context, sb);
+    return sb.toString();
   }
   
 }
