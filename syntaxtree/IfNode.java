@@ -1,5 +1,6 @@
 package minitemp.syntaxtree;
 
+import java.lang.StringBuilder;
 import minitemp.Context;
 
 /**

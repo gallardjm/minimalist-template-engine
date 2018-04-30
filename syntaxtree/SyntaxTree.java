@@ -1,7 +1,6 @@
 package minitemp.syntaxtree;
 
 import java.lang.StringBuilder;
-import java.util.List;
 import minitemp.Context;
 
 /**
@@ -12,7 +11,6 @@ public abstract class SyntaxTree {
   
   /** parent node if available */
   public SyntaxTree parent = null;
-  protected List<SyntaxTree> children = null;
   
   /** Add a node to this node */
   public void addNode(SyntaxTree node) {}
@@ -22,35 +20,6 @@ public abstract class SyntaxTree {
   
   /** render this node in a StringBuilder */
   public void renderWithStringBuilder(Context context, StringBuilder sb) throws IllegalArgumentException {}
-  
-  /**
-   * Render the children of this node with String concatenation (inefficient for large files).
-   * It is expected that the node classes will use a DFS when performing render
-   *
-   * @param the context of the rendering used to evaluate nodes and leafs
-   * @return the rendered syntax tree
-   */
-  public String renderChildren(Context context) throws IllegalArgumentException {
-    String result = "";
-    for(SyntaxTree child : children) {
-      result += child.render(context);
-    }
-    return result;
-  }
-  
-  /**
-   * Render the children of this node in a Stringbuilder.
-   * It is expected that the node classes will use a DFS when performing render
-   *
-   * @param the context of the rendering used to evaluate nodes and leafs
-   * @param the StringBuilder to accumulate
-   */
-  public void renderChildrenWithStringBuilder(Context context, StringBuilder sb) throws IllegalArgumentException {
-    for(SyntaxTree child : children) {
-      child.renderWithStringBuilder(context, sb);
-    }
-  }
-  
   
   /**
    * Build a SyntaxTree from a template (String) and a regex to tokenize the template
